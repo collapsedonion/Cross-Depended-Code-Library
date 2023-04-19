@@ -1,0 +1,14 @@
+
+
+#compile_commands
+compile_commands.json
+
+#cmake_build_directory
+build/
+
+#vim_temp
+*~
+*.swp
+
+#system_gen
+.DS_Store

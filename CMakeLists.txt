@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.25)
+project(CDC)
+
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
+
+add_library(CDC STATIC ${CMAKE_SOURCE_DIR}/cdc.h ${CMAKE_SOURCE_DIR}/cdc.c)
