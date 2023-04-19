@@ -2,10 +2,20 @@
 #define _CDC
 
 #ifdef __APPLE__
+#define cdc_path_separator '/'
+
 #ifdef __cplusplus
 	#define DL_EXTERN extern "C"
 #else
 	#define DL_EXTERN extern
+#endif
+#elif defined(WIN32)
+#define cdc_path_separator '\\'
+
+#ifdef __cplusplus
+	#define DL_EXTERN extern "C" __declspec(dllexport)
+#else
+	#define DL_EXTERN extern __declspec(dllexport)
 #endif
 #endif
 
