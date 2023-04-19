@@ -74,7 +74,7 @@ cdc_dynamic_lib_handle cdc_open_dynamic_lib(char* path_to_dl){
 
 #ifdef __APPLE__
 	void* handler = dlopen(real_path, RTLD_NOW);
-#else defined(WIN32)
+#elif defined(WIN32)
 	HINSTANCE handler = LoadLibrary(real_path);
 #endif	
 	free(real_path);
@@ -85,7 +85,7 @@ cdc_dynamic_lib_handle cdc_open_dynamic_lib(char* path_to_dl){
 void* cdc_get_dynamic_lib_member(cdc_dynamic_lib_handle dl_handle, char* member_name){
 #ifdef __APPLE__
 	return dlsym(dl_handle, member_name);
-#else defined(WIN32)
+#elif defined(WIN32)
 	return GetProcAddress(dl_handle, member_name);
 #endif
 }
@@ -94,7 +94,7 @@ void* cdc_get_dynamic_lib_member(cdc_dynamic_lib_handle dl_handle, char* member_
 void cdc_close_dynamic_lib(cdc_dynamic_lib_handle dl_handle){
 #ifdef __APPLE__
 	dlclose(dl_handle);
-#else defined(WIN32)
+#elif defined(WIN32)
 	FreeLibrary(dl_handle);
 #endif
 }
