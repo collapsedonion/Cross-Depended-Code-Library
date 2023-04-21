@@ -39,4 +39,10 @@ void cdc_close_dynamic_lib(cdc_dynamic_lib_handle dl_handle);
 }
 #endif
 
+#ifdef __cplusplus
+	extern "C" 
+#else
+	extern 
+#endif
+	long cdc_invoke(void* pointer, int arg_num, long* arguments); 
 #endif
