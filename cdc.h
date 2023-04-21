@@ -9,7 +9,7 @@
 #else
 	#define DL_EXTERN extern
 #endif
-#elif defined(WIN32)
+#elif defined(__CYGWIN__)
 #define cdc_path_separator '\\'
 
 #ifdef __cplusplus
@@ -40,9 +40,9 @@ void cdc_close_dynamic_lib(cdc_dynamic_lib_handle dl_handle);
 #endif
 
 #ifdef __cplusplus
-	extern "C" 
+	extern "C" long cdc_invoke(void* pointer, int arg_num, long long* arguments);
 #else
-	extern 
+	extern long cdc_invoke(void* pointer, int arg_num, long long* arguments);
 #endif
-	long cdc_invoke(void* pointer, int arg_num, long* arguments); 
+	
 #endif
