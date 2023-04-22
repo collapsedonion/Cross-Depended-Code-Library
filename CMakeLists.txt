@@ -16,6 +16,5 @@ elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
 	add_library(CDC STATIC ${PROJECT_SOURCE_DIR}/cdc.h ${PROJECT_SOURCE_DIR}/cdc.c ${PROJECT_SOURCE_DIR}/cdc_asm_arm64.S)
 else()
 	enable_language(C ASM)
-	
 	add_library(CDC STATIC ${PROJECT_SOURCE_DIR}/cdc.h ${PROJECT_SOURCE_DIR}/cdc.c ${PROJECT_SOURCE_DIR}/cdc_asm_gnu.S)
 endif()
