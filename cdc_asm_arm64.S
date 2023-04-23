@@ -74,17 +74,13 @@ _cdc_invoke:
 	
 	mov x19, sp
 	
-	add x16, x16, #8 
+	add x16, x16, #8
 
-	_allocate_arguments:
-	cmp x13, #0
-	b.ls _allocate_arguments_end
-
-	sub sp, sp, #16
-	sub x13, x13, #1	
-	b _allocate_arguments
-	_allocate_arguments_end:
+	mov x17, #16
+	mul x13, x13, x17
 	
+	sub sp, sp, x13 
+
 	mov x13, sp
 	
 	_send_cycle:
@@ -109,12 +105,12 @@ _cdc_invoke:
 	
 	udiv x17, x13, x12
 	msub x17, x17, x12, x13
-	
 	cmp x17, #0
-	b.eq _align_end
-	add x13, x13, #1
-	b _align_
-	_align_end:
+	b.eq _align_end_	
+	sub x12, x12, x17
+	add x13, x13, x12
+	
+	_align_end_:
 
 	cmp x14, #'i'
 	b.eq _send_i_
