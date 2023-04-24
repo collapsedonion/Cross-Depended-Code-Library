@@ -61,8 +61,8 @@ char* cdc_get_executable_directory() {
 	return result;
 }
 
-//opens dynamic library, reqires path to library without file extension (will be added automaticly)
-cdc_dynamic_lib_handle cdc_open_dynamic_lib(char* path_to_dl){
+//opens dynamic library, reqires path to library without file extension (will be added automaticly), if path_to_dl equals to "" returns handler to C standart lib
+cdc_dynamic_lib_handle cdc_open_dynamic_lib(char* path_to_dl) {
 	size_t new_str_len = strlen(path_to_dl);
 #ifdef __APPLE__
 	new_str_len += 6;
@@ -73,7 +73,7 @@ cdc_dynamic_lib_handle cdc_open_dynamic_lib(char* path_to_dl){
 #endif
 
 	char* real_path = 0;
-	if(strlen(path_to_dl) != 0){
+	if (strlen(path_to_dl) != 0) {
 		real_path = (char*)malloc(new_str_len + 1);
 		real_path = memcpy(real_path, path_to_dl, strlen(path_to_dl) + 1);
 		real_path = strcat(real_path, extension);
@@ -81,7 +81,13 @@ cdc_dynamic_lib_handle cdc_open_dynamic_lib(char* path_to_dl){
 #ifdef __APPLE__
 	void* handler = dlopen(real_path, RTLD_NOW);
 #elif defined(__CYGWIN__)
-	HINSTANCE handler = LoadLibrary(real_path);
+	HINSTANCE handler;
+	if (real_path == 0) {
+		handler = GetModuleHandle("ucrtbase.dll");
+	}
+	else {
+		handler = LoadLibrary(real_path);
+	}
 #endif
 	if(real_path != 0){	
 		free(real_path);
