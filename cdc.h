@@ -5,21 +5,21 @@
 #define cdc_path_separator '/'
 
 #ifdef __cplusplus
-	#define DL_EXTERN extern "C"
+    #define DL_EXTERN extern "C"
 #else
-	#define DL_EXTERN extern
+    #define DL_EXTERN extern
 #endif
-#elif defined(__CYGWIN__)
+#elif defined(_WIN32) || defined(__CYGWIN__)
 #define cdc_path_separator '\\'
 
 #ifdef __cplusplus
-	#define DL_EXTERN extern "C" __declspec(dllexport)
+    #define DL_EXTERN extern "C" __declspec(dllexport)
 #else
-	#define DL_EXTERN extern __declspec(dllexport)
+    #define DL_EXTERN extern __declspec(dllexport)
 #endif
 #endif
 
-typedef void* cdc_dynamic_lib_handle; 
+typedef void* cdc_dynamic_lib_handle;
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -34,6 +34,12 @@ cdc_dynamic_lib_handle cdc_open_dynamic_lib(char* path_to_dl);
 void* cdc_get_dynamic_lib_member(cdc_dynamic_lib_handle dl_handle, char* member_name);
 //close dynamic library
 void cdc_close_dynamic_lib(cdc_dynamic_lib_handle dl_handle);
+//set's console cursor position
+void cdc_set_cursor(int x, int y);
+//clears console
+void cdc_clear_console();
+//return handler current module
+cdc_dynamic_lib_handle cdc_get_current_module();
 
 #ifdef __cplusplus
 }
@@ -41,9 +47,9 @@ void cdc_close_dynamic_lib(cdc_dynamic_lib_handle dl_handle);
 
 //call function from pointer, with arg_num count of arguments, arguments taken from arguments array, according to datatype in arg_type null terminated string, supported datatypes: c-byte s-2 bytes i-4 bytes l-8 bytes
 #ifdef __cplusplus
-	extern "C" long cdc_invoke(void* pointer, int arg_num, long long* arguments, char* arg_type);
+    extern "C" long cdc_invoke(void* pointer, int arg_num, long long* arguments, char* arg_type);
 #else
-	extern long cdc_invoke(void* pointer, int arg_num, long long* arguments, char* arg_type);
+    extern long cdc_invoke(void* pointer, int arg_num, long long* arguments, char* arg_type);
 #endif
-	
+    
 #endif
