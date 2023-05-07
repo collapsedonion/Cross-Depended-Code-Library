@@ -5,6 +5,10 @@ compile_commands.json
 
 #cmake_build_directory
 build/
+out/
+cdc_test/
+.vs/
+*.json
 
 #vim_temp
 *~

@@ -130,12 +130,55 @@ void cdc_close_dynamic_lib(cdc_dynamic_lib_handle dl_handle){
 void cdc_set_cursor(int x, int y){
 #ifdef __APPLE__
     printf("\033[%d;%dH", y, x);
+#elif defined(WIN32)
+    COORD coords;
+    coords.X = x;
+    coords.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coords);
 #endif
 }
 
 void cdc_clear_console(){
 #ifdef __APPLE__
     printf("\033[H\033[J");
+#elif defined(WIN32)
+    HWND hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD coordScreen = { 0, 0 }; 
+    DWORD cCharsWritten;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    DWORD dwConSize;
+
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi))
+    {
+        return;
+    }
+
+    dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
+
+    if (!FillConsoleOutputCharacter(hConsole,        
+        (TCHAR)' ',     
+        dwConSize,       
+        coordScreen,     
+        &cCharsWritten)) 
+    {
+        return;
+    }
+
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi))
+    {
+        return;
+    }
+
+    if (!FillConsoleOutputAttribute(hConsole, 
+        csbi.wAttributes,
+        dwConSize,        
+        coordScreen,      
+        &cCharsWritten)) 
+    {
+        return;
+    }
+
+    SetConsoleCursorPosition(hConsole, coordScreen);
 #endif
 }
 
