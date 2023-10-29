@@ -7,7 +7,7 @@
     #include <mach-o/dyld.h>
     #include <dlfcn.h>
 #endif
-#if defined(_WIN32) || defined(__CYGWIN__)
+#if defined(WIN32)
     #include <Windows.h>
 #endif
 
