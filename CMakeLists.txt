@@ -7,6 +7,7 @@ set(PROJECT_BINARY_DIR ${PROJECT_SOURCE_DIR}/build)
 
 
 if(APPLE)
+	add_definitions(-Dunix)
 	if ((${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64"))
 		enable_language(C ASM)
 		add_library(CDC STATIC ${PROJECT_SOURCE_DIR}/cdc.h ${PROJECT_SOURCE_DIR}/cdc.c ${PROJECT_SOURCE_DIR}/cdc_asm_arm64.S)
@@ -25,6 +26,8 @@ if(WIN32)
 endif()
 
 if(LINUX)
+	add_definitions(-Dunix)
 	enable_language(C ASM)
+	add_definitions(-Dlinux)
 	add_library(CDC STATIC ${PROJECT_SOURCE_DIR}/cdc.h ${PROJECT_SOURCE_DIR}/cdc.c ${PROJECT_SOURCE_DIR}/cdc_asm_gnu.S)
 endif()

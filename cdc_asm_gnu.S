@@ -2,9 +2,15 @@
 .intel_syntax noprefix
 
 .text
+#ifdef unix
+
 #ifdef __APPLE__
 .global _cdc_invoke
 _cdc_invoke:
+#else
+.global cdc_invoke
+cdc_invoke:
+#endif
 	push r10
 	push r11
 	push r12

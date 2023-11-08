@@ -3,18 +3,22 @@
 #include <string.h>
 #include <stdio.h>
 #ifdef __APPLE__
+    	#include <mach-o/dyld.h>
+#endif
+#ifdef unix
     #include <unistd.h>
-    #include <mach-o/dyld.h>
     #include <dlfcn.h>
 #endif
 #if defined(WIN32)
     #include <Windows.h>
 #endif
-
+#if defined(linux)
+    #include <linux/limits.h>
+#endif
 
 //returns current work directory
 char* cdc_get_current_directory(){
-#ifdef __APPLE__
+#ifdef unix
     size_t buffer_size = 64;
     char* buf = (char*)malloc(buffer_size);
     while(getcwd(buf, buffer_size) == NULL){
@@ -50,6 +54,11 @@ char* cdc_get_executable_directory() {
         GetModuleFileName(NULL, buf, buffer_size);
     } while (GetLastError() == ERROR_INSUFFICIENT_BUFFER);
 #endif
+
+#if defined(linux)
+    char* buf = (char*)malloc(PATH_MAX);
+    readlink("/proc/self/exe", buf, PATH_MAX);
+#endif
     char* last_symbol = strrchr(buf, cdc_path_separator);
     if (last_symbol == NULL) {
         return buf;
@@ -71,15 +80,17 @@ cdc_dynamic_lib_handle cdc_open_dynamic_lib(char* path_to_dl) {
 #elif defined(WIN32)
     new_str_len += 4;
     char* extension = ".dll";
+#elif defined(linux)
+    new_str_len += 3;
+    char* extension = ".so";
 #endif
-
     char* real_path = 0;
     if (strlen(path_to_dl) != 0) {
         real_path = (char*)malloc(new_str_len + 1);
         real_path = memcpy(real_path, path_to_dl, strlen(path_to_dl) + 1);
         real_path = strcat(real_path, extension);
     }
-#ifdef __APPLE__
+#ifdef unix
     void* handler = dlopen(real_path, RTLD_NOW);
 #elif defined(WIN32)
     HINSTANCE handler;
@@ -100,7 +111,7 @@ cdc_dynamic_lib_handle cdc_open_dynamic_lib(char* path_to_dl) {
 }
 
 cdc_dynamic_lib_handle cdc_get_current_module(){
-#ifdef __APPLE__
+#ifdef unix
     void* handler = dlopen(0, RTLD_NOW);
 #elif defined(WIN32)
     HINSTANCE handler;
@@ -111,7 +122,7 @@ cdc_dynamic_lib_handle cdc_get_current_module(){
 
 //extracts pointer to symbol at dynamic library
 void* cdc_get_dynamic_lib_member(cdc_dynamic_lib_handle dl_handle, char* member_name){
-#ifdef __APPLE__
+#ifdef unix
     return dlsym(dl_handle, member_name);
 #elif defined(__CYGWIN__) || defined(WIN32)
     return GetProcAddress(dl_handle, member_name);
@@ -120,7 +131,7 @@ void* cdc_get_dynamic_lib_member(cdc_dynamic_lib_handle dl_handle, char* member_
 
 //close dynamic library
 void cdc_close_dynamic_lib(cdc_dynamic_lib_handle dl_handle){
-#ifdef __APPLE__
+#ifdef unix_
     dlclose(dl_handle);
 #elif defined(WIN32) || defined(__CYGWIN__)
     FreeLibrary(dl_handle);
@@ -128,7 +139,7 @@ void cdc_close_dynamic_lib(cdc_dynamic_lib_handle dl_handle){
 }
 
 void cdc_set_cursor(int x, int y){
-#ifdef __APPLE__
+#ifdef unix
     printf("\033[%d;%dH", y, x);
 #elif defined(WIN32)
     COORD coords;
@@ -139,7 +150,7 @@ void cdc_set_cursor(int x, int y){
 }
 
 void cdc_clear_console(){
-#ifdef __APPLE__
+#ifdef unix
     printf("\033[H\033[J");
 #elif defined(WIN32)
     HWND hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
