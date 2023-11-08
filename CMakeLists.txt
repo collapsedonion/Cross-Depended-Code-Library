@@ -7,7 +7,7 @@ set(PROJECT_BINARY_DIR ${PROJECT_SOURCE_DIR}/build)
 
 
 if(APPLE)
-	add_definitions(-Dunix)
+	add_definitions(-Dunix=true)
 	if ((${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64"))
 		enable_language(C ASM)
 		add_library(CDC STATIC ${PROJECT_SOURCE_DIR}/cdc.h ${PROJECT_SOURCE_DIR}/cdc.c ${PROJECT_SOURCE_DIR}/cdc_asm_arm64.S)

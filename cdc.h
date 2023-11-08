@@ -1,6 +1,12 @@
 #ifndef _CDC
 #define _CDC
 
+#ifdef __APPLE__
+#ifndef unix
+#define unix
+#endif
+#endif
+
 #ifdef unix
 #define cdc_path_separator '/'
 
